@@ -9,7 +9,7 @@ const openaiClient = axios.create({
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${OPENAI_API_KEY}`
   },
-  timeout: 30000
+  timeout: 60000
 })
 
 
@@ -187,13 +187,19 @@ export async function translateAudio(audioBlob) {
   return response.data.text
 }
 
-// 生成图片
+/**
+ * 生成图片
+ * @param {string} prompt - 图片描述提示词
+ * @returns {string} 图片URL
+ */
 export async function generateImage(prompt) {
   const response = await openaiClient.post('/images/generations', {
     prompt,
     n: 1,
     size: '1024x1024',
     model: 'dall-e-3'
+  }, {
+    timeout: 180000 // 180秒超时时间
   })
   return response.data.data[0].url
 }
